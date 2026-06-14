@@ -11,10 +11,10 @@ function TypingIndicator() {
   );
 }
 
-export function MessageList({ messages, loading }: { messages: ChatMessage[]; loading: boolean }) {
+export function MessageList({ messages, loading, onFollowUpPick }: { messages: ChatMessage[]; loading: boolean; onFollowUpPick?: (q: string) => void }) {
   return (
     <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto p-3">
-      {messages.map((m, i) => <MessageBubble key={i} message={m} />)}
+      {messages.map((m, i) => <MessageBubble key={i} message={m} onFollowUpPick={onFollowUpPick} />)}
       {loading && <TypingIndicator />}
     </div>
   );

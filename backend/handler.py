@@ -47,6 +47,11 @@ def lambda_handler(event: dict[str, Any], _context: Any) -> dict[str, Any]:
         return _resp(502, {"error": "the assistant is temporarily unavailable"})
 
     result = build_response(rag)
+    # Generate follow-up questions
+    follow_ups = bedrock.generate_follow_ups(result["answer"])
+    if follow_ups:
+        result["followUps"] = follow_ups
+
     # Lightweight, privacy-respecting observability (no PII beyond the question itself).
     print(json.dumps({"event": "chat", "repo": repo, "session": bool(session_id),
                       "num_citations": len(result["citations"]), "q_len": len(message)}))

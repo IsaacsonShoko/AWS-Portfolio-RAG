@@ -23,7 +23,7 @@ export function FourDAssistant({ repos = [] }: FourDAssistantProps) {
     try {
       const res = await sendChat({ message: text, sessionId, repo: repo ?? undefined });
       setSessionId(res.sessionId);
-      setMessages((m) => [...m, { role: "assistant", text: res.answer, citations: res.citations }]);
+      setMessages((m) => [...m, { role: "assistant", text: res.answer, citations: res.citations, followUps: res.followUps }]);
     } catch {
       toast.error("The assistant is temporarily unavailable. Please try again.");
     } finally {

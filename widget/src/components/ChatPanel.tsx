@@ -5,6 +5,7 @@ import { MessageList } from "./MessageList";
 import { StarterQuestions } from "./StarterQuestions";
 import type { ChatMessage } from "./MessageBubble";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function ChatPanel({
   messages, loading, repos, repo, onRepoChange, onSend, onClose,
@@ -45,19 +46,19 @@ export function ChatPanel({
       {messages.length === 0 ? (
         <StarterQuestions onPick={onSend} repos={repos} repo={repo} onRepoChange={onRepoChange} />
       ) : (
-        <MessageList messages={messages} loading={loading} />
+        <MessageList messages={messages} loading={loading} onFollowUpPick={onSend} />
       )}
 
       <p className="px-3 pb-1 text-[10px] text-muted-foreground">
         AI assistant answering only from public GitHub repositories.
       </p>
       <form onSubmit={submit} className="flex gap-2 border-t border-border/30 p-3">
-        <input
+        <Input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Ask a question…"
           aria-label="Ask a question"
-          className="flex-1 rounded-none border border-border bg-input px-2 py-1 text-sm text-foreground focus:border-[hsl(38,92%,55%)]/50 focus:outline-none"
+          className="flex-1"
         />
         <Button type="submit" size="sm" aria-label="Send"><Send className="h-4 w-4" /></Button>
       </form>

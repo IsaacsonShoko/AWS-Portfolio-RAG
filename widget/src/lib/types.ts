@@ -11,6 +11,7 @@ export interface ChatResponse {
   answer: string;
   citations: Citation[];
   sessionId: string;
+  followUps?: string[];
 }
 
 export interface ChatRequest {

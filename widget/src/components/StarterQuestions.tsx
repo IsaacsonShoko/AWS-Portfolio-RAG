@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const STARTERS = [
   "What frameworks did he use for API calls?",
@@ -20,15 +21,19 @@ export function StarterQuestions({
   return (
     <div className="space-y-3 p-3">
       {repos.length > 0 && (
-        <select
-          aria-label="Scope answers to one project"
-          value={repo ?? ""}
-          onChange={(e) => onRepoChange(e.target.value || null)}
-          className="w-full rounded-none border border-border bg-input px-2 py-1 text-sm text-foreground"
-        >
-          <option value="">All projects</option>
-          {repos.map((r) => <option key={r} value={r}>{r}</option>)}
-        </select>
+        <Select value={repo ?? "all"} onValueChange={(val) => onRepoChange(val === "all" ? null : val)}>
+          <SelectTrigger aria-label="Scope answers to one project">
+            <SelectValue placeholder="All projects" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All projects</SelectItem>
+            {repos.map((r) => (
+              <SelectItem key={r} value={r}>
+                {r}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       )}
       <div className="flex flex-wrap gap-2">
         {STARTERS.map((q) => (
