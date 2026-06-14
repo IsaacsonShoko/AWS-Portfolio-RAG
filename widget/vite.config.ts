@@ -6,4 +6,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: { alias: { "@": path.resolve(__dirname, "src") } },
   test: { environment: "jsdom", setupFiles: ["./test/setup.ts"], globals: true },
+  build: {
+    lib: {
+      entry: "src/embed.tsx",
+      name: "FourDAssistant",
+      fileName: "fourd-assistant",
+      formats: ["es", "umd"],
+    },
+  },
 });
