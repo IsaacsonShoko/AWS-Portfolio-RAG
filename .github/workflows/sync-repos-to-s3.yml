@@ -1,0 +1,111 @@
+name: Sync portfolio repos to S3
+
+# Manually trigger from the Actions tab. Uncomment the schedule to also run weekly.
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: "0 3 * * 1"
+
+permissions:
+  id-token: write   # required for AWS OIDC, no long lived keys
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  S3_BUCKET: ${{ vars.KB_S3_BUCKET }}
+  MAX_FILE_KB: "200"   # skip any single file larger than this
+
+jobs:
+  sync:
+    name: Sync ${{ matrix.repo }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Edit this list to choose which repositories get pushed.
+        repo:
+          - your-github-username/sim-conveyor-vision
+          - your-github-username/chefmind-ai
+          - your-github-username/xlink-inventory
+
+    steps:
+      - name: Check out this repo (for the prep script)
+        uses: actions/checkout@v4
+
+      - name: Check out target repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ matrix.repo }}
+          token: ${{ secrets.REPO_READ_TOKEN }}   # fine grained PAT, Contents read
+          path: _repo
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Filter repo and build clean payload
+        id: prep
+        env:
+          GH_TOKEN: ${{ secrets.REPO_READ_TOKEN }}
+        run: |
+          OWNER="${{ matrix.repo }}"
+          OWNER="${OWNER%%/*}"
+          REPO_NAME="${{ matrix.repo }}"
+          REPO_NAME="${REPO_NAME##*/}"
+          # Resolve the default branch so citation links point at a stable ref.
+          DEFAULT_BRANCH="$(gh api "repos/${{ matrix.repo }}" --jq .default_branch)"
+          echo "repo_name=$REPO_NAME" >> "$GITHUB_OUTPUT"
+          python scripts/prepare_repo_for_s3.py \
+            --src _repo \
+            --out _clean \
+            --owner "$OWNER" \
+            --repo "$REPO_NAME" \
+            --branch "$DEFAULT_BRANCH" \
+            --max-bytes $(( MAX_FILE_KB * 1024 )) \
+            --summary _summary.md
+          echo "## Payload for ${REPO_NAME} (branch ${DEFAULT_BRANCH})" >> "$GITHUB_STEP_SUMMARY"
+          cat _summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Sync clean payload to S3
+        run: |
+          # --size-only: do not re-upload a file whose size is unchanged,
+          #   which is what stops Bedrock from re-embedding it and charging you again.
+          # --delete: remove objects under this prefix that no longer exist locally,
+          #   so the knowledge base never carries stale chunks.
+          aws s3 sync _clean "s3://${S3_BUCKET}/repos/${{ steps.prep.outputs.repo_name }}" \
+            --delete \
+            --size-only \
+            --no-progress
+
+  # Optional: kick off a Bedrock Knowledge Base ingestion run after all repos sync.
+  # Only runs if you set the two KB identifiers as repository variables.
+  trigger-ingestion:
+    name: Trigger Bedrock KB ingestion
+    needs: sync
+    runs-on: ubuntu-latest
+    if: ${{ vars.BEDROCK_KB_ID != '' && vars.BEDROCK_DATA_SOURCE_ID != '' }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Start ingestion job
+        run: |
+          aws bedrock-agent start-ingestion-job \
+            --knowledge-base-id "${{ vars.BEDROCK_KB_ID }}" \
+            --data-source-id "${{ vars.BEDROCK_DATA_SOURCE_ID }}" \
+            --description "Triggered by GitHub Actions repo sync"

@@ -1,0 +1,109 @@
+BLUEPRINT: Recruiter-facing RAG chatbot over my GitHub projects, on AWS Bedrock, themed to drop into my existing site
+
+0. CONTEXT AND HOSTING MODEL
+This chatbot is built in its own separate repository for now. It will later be ingested into my existing website (4D Analytics), so it must be built to match that site's theme exactly and to drop in as a self-contained widget with no restyling. The website stack is React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui (Radix), Framer Motion, lucide-react, and sonner, with React Router. Build the chatbot in the same stack so the port is a copy-paste of a component, not a rewrite.
+
+Primary deliverable form: a self-contained, themed floating assistant exported as a single React component (call it FourDAssistant) that renders a bottom-right launcher button and a chat panel. Dropping it into the site means importing the component and rendering it once inside the site Layout, with no router or global style changes required. Also provide a standalone dev page in the separate repo so it can be developed and demoed in isolation. As a secondary option, provide an embeddable bundle that mounts into a div by id for non-React contexts. The backend endpoint must come from an env var (for example VITE_CHAT_API_URL) so the same widget works standalone in dev and embedded in production.
+
+1. OBJECTIVE
+A chatbot that lets recruiters and hiring managers ask natural questions about my engineering work and get accurate answers drawn only from my GitHub repositories, with every answer citing the exact source files as clickable GitHub links. Example questions it must handle well: "What frameworks did he use for API calls?", "How did he handle authentication?", "Which projects use AWS?", "How is testing or deployment done?", "Why did he choose X over Y?". Purely an AWS Bedrock delivery, and it must avoid the expensive OpenSearch Serverless vector store.
+
+2. THEME AND DESIGN SYSTEM (match exactly)
+Replicate these tokens in the standalone repo's CSS so the widget looks identical in isolation, and so it inherits cleanly once embedded. All colors are HSL triplets used as hsl(var(--token)).
+
+Fonts:
+- Display font: 'Syne', sans-serif, exposed as --font-display. Used on all headings, with letter-spacing -0.02em.
+- Body font: 'DM Sans', sans-serif, exposed as --font-body.
+- Load both (Google Fonts) in the standalone app so it matches when run alone.
+
+Color tokens:
+- --background: 220 22% 11%
+- --foreground: 210 40% 98%
+- --card: 220 20% 14%
+- --card-foreground: 210 40% 98%
+- --popover: 220 22% 10%
+- --popover-foreground: 210 40% 98%
+- --primary: 217 91% 60%
+- --primary-foreground: 224 71% 4%
+- --secondary: 220 16% 18%
+- --secondary-foreground: 210 40% 90%
+- --muted: 220 14% 20%
+- --muted-foreground: 220 15% 60%
+- --accent: 38 92% 55%
+- --accent-foreground: 224 71% 4%
+- --destructive: 0 84.2% 60.2%
+- --border: 220 14% 22%
+- --input: 220 19% 20%
+- --ring: 217 91% 60%
+- --radius: 0.5rem
+
+Accent usage:
+- The single warm accent is amber, used throughout as the literal value hsl(38,92%,55%).
+- Amber hover (darker): hsl(38,92%,45%). Amber lighter text hover: hsl(38,92%,65%).
+- Text sitting on an amber fill uses the near-black hsl(224,71%,4%).
+
+Utility classes to replicate and use:
+- .panel: bg-card with border border-white/[0.06] and shadow-lg. This is the main surface for the chat panel.
+- .glass: bg-card/80 with backdrop-blur-md, border border-white/[0.08], shadow-lg. Use for the launcher and any overlay.
+- .dot-grid: radial-gradient(circle, hsl(210 40% 98% / 0.04) 1px, transparent 1px) at background-size 24px 24px. Optional subtle texture behind the panel.
+- .glow-accent: box-shadow 0 0 40px hsl(38 92% 55% / 0.15). Use on the launcher.
+- .gradient-text: bg-clip-text text-transparent over linear-gradient(135deg, hsl(217,91%,60%), hsl(38,92%,55%)).
+- .no-scrollbar for the message list.
+
+Component conventions to match the site:
+- Use shadcn/ui primitives (Button, Card, Badge, Input or Textarea, Tooltip) and lucide-react icons, exactly as the site does.
+- Primary call to action buttons: rounded-none, background hsl(38,92%,55%), text hsl(224,71%,4%), font-semibold, hover background hsl(38,92%,45%).
+- Secondary buttons: variant outline, rounded-none, hover border hsl(38,92%,55%)/50.
+- Cards and surfaces: border border-border/30, hover border hsl(38,92%,55%)/50.
+- Badges: rounded-full or rounded-sm, secondary and outline variants, as used for tech pills.
+- Animation via Framer Motion with restrained entrances (opacity and small y), matching the site's calm motion. Toasts via sonner.
+- Active and accent dots use a small amber circle with animate-pulse, matching the site's status dots.
+
+3. WIDGET UX (themed to the above)
+- Launcher: a circular amber button fixed bottom-right, using .glass and .glow-accent, with a lucide icon and a small pulsing amber dot. On open it expands into the chat panel.
+- Panel: a dark .panel surface, rounded per --radius, header title in the Syne display font with the amber accent, body in DM Sans. Mobile renders the panel as a full-screen sheet.
+- Starter questions: 4 to 6 suggested questions shown on first open as secondary chips (frameworks for API calls, authentication approach, AWS usage, testing and deployment, architecture decisions, biggest project), so the user never faces a blank box.
+- Messages: clear user and assistant distinction, assistant on a muted surface. A streaming typing indicator using three small amber dots.
+- Citations: every substantive answer ends with a Sources list rendered as clickable amber GitHub links built from the chunk metadata github_url, with numbered inline markers that map to the list. An expandable evidence panel per source shows the retrieved snippet and the file link.
+- A persistent, low key line stating this is an AI answering from my public repositories.
+- Suggested follow up chips after each answer, a repo filter to scope answers to one project, and a contact call to action linking to my contact page and LinkedIn.
+- Respect prefers-reduced-motion, be keyboard operable with labelled controls and sufficient contrast, and never leak global styles into the host page (scope the widget's container).
+
+4. ARCHITECTURE (purely AWS Bedrock)
+Data is already loaded by an existing GitHub Action that filters each selected repo to embeddable files, writes a "<file>.metadata.json" sidecar carrying owner, repo, branch, language, path, and a prebuilt github_url, then syncs to s3://<bucket>/repos/<repo-name>/. Build the rest as:
+- Vector store: Amazon S3 Vectors (an S3 vector bucket and index, cosine distance). Do not use OpenSearch Serverless.
+- Knowledge Base: Amazon Bedrock Knowledge Base with the S3 bucket as the data source and S3 Vectors as the store.
+- Embeddings: Amazon Titan Text Embeddings V2.
+- Generation: a Bedrock model, Claude Haiku or Amazon Nova Lite tier for cost.
+- Retrieval and answering: the Bedrock RetrieveAndGenerate API with session support for conversation memory. Read its returned citations and source metadata to build links.
+- Backend: a Lambda behind API Gateway that calls RetrieveAndGenerate, maps each retrieved chunk's github_url metadata into the citation links, shapes the response as answer plus structured citations, and supports streaming. The widget calls this endpoint, never Bedrock directly.
+- Safety: a Bedrock Guardrail attached to retrieval and generation.
+Note that the serverless being avoided is the OpenSearch Serverless vector store, not Lambda or API Gateway, which are fine and pay per request.
+
+5. CITATIONS VIA GITHUB LINKS (core requirement)
+- Ground every claim in retrieved chunks and filter retrieved references by a relevance score so weak matches are dropped.
+- The backend reads github_url straight off each retrieved chunk's metadata and returns it with the answer. The widget renders these as clickable amber links in the Sources list, with inline numbered markers mapping to them.
+- The evidence panel shows the exact retrieved snippet alongside its link.
+- If retrieval returns nothing relevant, the bot says it does not have that in the indexed repositories and never fabricates a path or link.
+
+6. BOT BEHAVIOR
+Answer only from retrieved context, say plainly when something is not present, cite sources on every substantive answer, stay on the topic of my engineering work and decline unrelated requests, be concise first with the option to go deeper, support follow up questions via session memory, and scope to a single project via metadata filtering on repo when the user names one. The bot is an assistant answering from my repositories, not a roleplay of me.
+
+7. GUARDRAILS AND SAFETY
+Attach a Bedrock Guardrail that blocks off-topic and harmful prompts, prevents PII leakage, and discourages ungrounded answers. Refuse prompt injection embedded in questions and never reveal system instructions.
+
+8. NON-FUNCTIONAL
+- Cost: rely on the existing upload filtering and incremental sync so unchanged files are not re-embedded, use S3 Vectors and a low cost generation model, cap response length, no idle compute.
+- Security: AWS access via OIDC roles with least privilege, no secrets in the repo or the client, basic rate limiting on the API.
+- Performance: lazy load the widget, stream answers, keep cold starts low.
+- Observability: log requests, retrieval scores, and errors, plus lightweight, privacy-respecting logging of the questions asked for my own insight.
+
+9. OUT OF SCOPE FOR V1
+Bedrock Agents and tool use, multi-user accounts, and write actions. V1 is grounded question answering with citations.
+
+10. DELIVERABLES
+- Infrastructure to create the S3 vector bucket and index, the Bedrock Knowledge Base and data source, the embeddings and generation configuration, and the Guardrail.
+- The Lambda and API Gateway backend, including the github_url citation mapping and streaming.
+- The standalone repo containing the themed FourDAssistant React widget, the replicated theme tokens and fonts, a standalone dev page, and a secondary embeddable bundle option.
+- A README covering local dev, the env vars including VITE_CHAT_API_URL, the required IAM, how to run an ingestion job after a repo sync, and the exact steps to ingest the widget into the website Layout.
+- Confirmation that the widget scopes its styles and renders correctly both standalone and embedded.

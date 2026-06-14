@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+# Node
+node_modules/
+dist/
+# Local config & secrets
+config.env
+*.env.local
+.env
+# Build artifacts
+backend/build/
+backend/*.zip
+_repo/
+_clean/
+_summary.md
