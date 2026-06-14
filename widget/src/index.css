@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 22% 11%;
+    --foreground: 210 40% 98%;
+    --card: 220 20% 14%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 22% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 220 16% 18%;
+    --secondary-foreground: 210 40% 90%;
+    --muted: 220 14% 20%;
+    --muted-foreground: 220 15% 60%;
+    --accent: 38 92% 55%;
+    --accent-foreground: 224 71% 4%;
+    --destructive: 0 84.2% 60.2%;
+    --border: 220 14% 22%;
+    --input: 220 19% 20%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+}
+
+/* Scope-friendly: these utilities are namespaced under .fourd-assistant so they
+   never leak into a host page when embedded. */
+.fourd-assistant { font-family: var(--font-body); color: hsl(var(--foreground)); }
+.fourd-assistant h1, .fourd-assistant h2, .fourd-assistant h3 {
+  font-family: var(--font-display); letter-spacing: -0.02em;
+}
+.fourd-assistant .panel {
+  background: hsl(var(--card)); border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+.fourd-assistant .glass {
+  background: hsl(var(--card) / 0.8); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4);
+}
+.fourd-assistant .dot-grid {
+  background-image: radial-gradient(circle, hsl(210 40% 98% / 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.fourd-assistant .glow-accent { box-shadow: 0 0 40px hsl(38 92% 55% / 0.15); }
+.fourd-assistant .gradient-text {
+  background-clip: text; -webkit-background-clip: text; color: transparent;
+  background-image: linear-gradient(135deg, hsl(217 91% 60%), hsl(38 92% 55%));
+}
+.fourd-assistant .no-scrollbar::-webkit-scrollbar { display: none; }
+.fourd-assistant .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fourd-assistant * { animation: none !important; transition: none !important; }
+}
