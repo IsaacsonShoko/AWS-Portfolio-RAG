@@ -37,13 +37,22 @@ export function StarterQuestions({
           </button>
         ))}
       </div>
-      <a
-        href={import.meta.env.VITE_CONTACT_URL as string}
-        target="_blank" rel="noopener noreferrer"
-        className="block text-xs text-[hsl(38,92%,55%)] hover:text-[hsl(38,92%,65%)]"
-      >
-        Prefer to talk to a human? Get in touch →
-      </a>
+      <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+        <a
+          href={import.meta.env.VITE_CONTACT_URL as string}
+          target="_blank" rel="noopener noreferrer"
+          className="text-[hsl(38,92%,55%)] hover:text-[hsl(38,92%,65%)]"
+        >
+          Prefer to talk to a human? Get in touch →
+        </a>
+        <a
+          href={import.meta.env.VITE_LINKEDIN_URL as string}
+          target="_blank" rel="noopener noreferrer"
+          className="text-[hsl(38,92%,55%)] hover:text-[hsl(38,92%,65%)]"
+        >
+          LinkedIn →
+        </a>
+      </div>
     </div>
   );
 }
