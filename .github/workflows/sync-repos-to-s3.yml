@@ -14,6 +14,7 @@ env:
   AWS_REGION: ${{ vars.AWS_REGION }}
   S3_BUCKET: ${{ vars.KB_S3_BUCKET }}
   MAX_FILE_KB: "200"   # skip any single file larger than this
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   sync:
