@@ -24,9 +24,13 @@ jobs:
       matrix:
         # Edit this list to choose which repositories get pushed.
         repo:
-          - IsaacsonShoko/your-first-repo-name
-          - IsaacsonShoko/your-second-repo-name
-          - IsaacsonShoko/your-third-repo-name
+          - IsaacsonShoko/inventory-mangement-4d
+          - IsaacsonShoko/MetalSniper-StatArb
+          - IsaacsonShoko/4dwebsite
+          - IsaacsonShoko/AI_Recommendation_Systems
+          - IsaacsonShoko/Uptime-Report
+          - IsaacsonShoko/AWS-Portfolio-RAG
+          - IsaacsonShoko/ComputerVision-ICCID-Extraction
 
     steps:
       - name: Check out this repo (for the prep script)
