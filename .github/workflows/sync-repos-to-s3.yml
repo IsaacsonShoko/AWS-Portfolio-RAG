@@ -24,9 +24,9 @@ jobs:
       matrix:
         # Edit this list to choose which repositories get pushed.
         repo:
-          - your-github-username/sim-conveyor-vision
-          - your-github-username/chefmind-ai
-          - your-github-username/xlink-inventory
+          - IsaacsonShoko/your-first-repo-name
+          - IsaacsonShoko/your-second-repo-name
+          - IsaacsonShoko/your-third-repo-name
 
     steps:
       - name: Check out this repo (for the prep script)
