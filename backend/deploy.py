@@ -18,7 +18,11 @@ def make_zip() -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("backend/__init__.py", "")
-        for name in ("handler.py", "bedrock.py", "citations.py"):
+        for name in (
+            "handler.py", "bedrock.py", "citations.py", 
+            "intents.py", "query_rewriter.py", "retrieval_router.py", 
+            "answer_composer.py", "project_profiles.json"
+        ):
             z.write(f"backend/{name}", f"backend/{name}")
     return buf.getvalue()
 

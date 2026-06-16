@@ -1,0 +1,442 @@
+{
+   "version": 1,
+   "purpose": "Semantic project profiles for portfolio-aware recruiter and RAG retrieval.",
+   "notes": [
+     "These profiles are derived from the current portfolio project pages and known repo descriptions.",
+     "They are intended to support intent classification, query rewriting, summary-first retrieval, and recruiter-style answer composition.",
+     "Confidence indicates how directly the profile is grounded in current on-site content."
+   ],
+   "profiles": [
+     {
+       "repo": "ComputerVision-ICCID-Extraction",
+       "title": "Computer Vision Mini Conveyor System",
+       "slug": "computer-vision-mini-conveyor-system",
+       "summary": "A custom hardware and edge-AI inspection system that automates SIM card staging, imaging, OCR workflow routing, and analytics from device capture through cloud validation.",
+       "business_problem": "Manual SIM card processing was slow, expensive, and error-prone, limiting throughput and compromising data quality.",
+       "user_or_business_outcome": [
+         "Cuts processing time from minutes per card to seconds.",
+         "Scales daily capacity from hundreds to more than ten thousand cards.",
+         "Reduces labor cost dramatically while improving accuracy."
+       ],
+       "strongest_engineering_signals": [
+         "End-to-end ownership across hardware, edge compute, cloud integration, and analytics",
+         "Custom hardware design when off-the-shelf tooling is not enough",
+         "IoT telemetry and event-driven workflow automation",
+         "Practical computer vision and hybrid edge/cloud inference"
+       ],
+       "domains": [
+         "iot",
+         "edge-computing",
+         "computer-vision",
+         "hardware",
+         "automation",
+         "analytics"
+       ],
+       "capabilities": [
+         "ESP32 and Raspberry Pi integration",
+         "GPIO, stepper, servo, and sensor control",
+         "TensorFlow Lite and edge inference",
+         "AWS S3 and AWS IoT Core ingestion",
+         "Lambda-triggered workflow orchestration",
+         "Operational dashboards"
+       ],
+       "best_for": [
+         "IoT engineering roles",
+         "edge AI roles",
+         "systems engineering roles",
+         "automation engineering roles"
+       ],
+       "notable_tradeoffs": [
+         "Uses a confidence-based routing strategy to balance edge speed against cloud verification quality.",
+         "Combines physical-system complexity with cloud validation instead of assuming vision alone is enough."
+       ],
+       "recruiter_questions": [
+         "How does this project prove he can collect telemetry from physical systems and turn it into business value?",
+         "What part of this build best shows custom hardware and edge-system capability?",
+         "How did he connect device capture, cloud workflows, and analytics into one pipeline?"
+       ],
+       "technical_keywords": [
+         "raspberry pi",
+         "esp32",
+         "edge impulse",
+         "tensorflow lite",
+         "opencv",
+         "gpio",
+         "aws iot core",
+         "aws s3",
+         "lambda",
+         "n8n",
+         "airtable",
+         "power bi",
+         "ocr"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "inventory-mangement-4d",
+       "title": "Low Code Economics",
+       "slug": "low-code-economics",
+       "summary": "A custom enterprise operations platform used to show when bespoke software beats low-code platforms on total cost, flexibility, offline support, and long-term control.",
+       "business_problem": "Enterprise low-code platforms can accelerate delivery, but licensing, platform limits, and vendor lock-in can make them economically unattractive for core operational systems.",
+       "user_or_business_outcome": [
+         "Demonstrates multi-year savings versus enterprise low-code licensing.",
+         "Supports more than one hundred concurrent users with custom workflows.",
+         "Keeps full ownership of data model, UX, and extensibility."
+       ],
+       "strongest_engineering_signals": [
+         "Business-case thinking tied directly to software architecture",
+         "Full-stack enterprise application delivery",
+         "Role-based access, offline-first UX, and workflow design",
+         "Ability to translate operational requirements into product features"
+       ],
+       "domains": [
+         "enterprise-software",
+         "business-systems",
+         "full-stack",
+         "pwa",
+         "analytics"
+       ],
+       "capabilities": [
+         "React and TypeScript frontend delivery",
+         "Supabase auth, database, and realtime subscriptions",
+         "Role-based permissions and approval workflows",
+         "Offline-first PWA behavior",
+         "Interactive dashboards and PDF export"
+       ],
+       "best_for": [
+         "full-stack roles",
+         "product-minded engineering roles",
+         "enterprise application roles",
+         "internal tools roles"
+       ],
+       "notable_tradeoffs": [
+         "Slightly longer time to MVP than low-code in exchange for major multi-year cost savings and control.",
+         "Chooses custom engineering over platform convenience to avoid lock-in and licensing drag."
+       ],
+       "recruiter_questions": [
+         "How does this project show that he can link technical delivery to business economics?",
+         "What does this build reveal about his full-stack and workflow-design strengths?",
+         "Why was a custom platform the better decision here than low-code?"
+       ],
+       "technical_keywords": [
+         "react",
+         "typescript",
+         "tailwind",
+         "shadcn",
+         "supabase",
+         "postgresql",
+         "rbac",
+         "pwa",
+         "indexeddb",
+         "recharts",
+         "pdf export"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "AI_Recommendation_Systems",
+       "title": "ChefMind AI",
+       "slug": "chef-mind-ai",
+       "summary": "An AI recipe recommendation system that combines semantic embeddings, vector search, inventory awareness, and cross-platform product delivery to recommend meals users can actually make.",
+       "business_problem": "Recipe apps often ignore what users already have on hand, leading to poor recommendations and unnecessary shopping friction.",
+       "user_or_business_outcome": [
+         "Surfaces recipes matched to real ingredient availability, not just keyword overlap.",
+         "Keeps inventory, shopping, and recommendation logic in one flow.",
+         "Delivers the experience across web, mobile, CLI, and API surfaces."
+       ],
+       "strongest_engineering_signals": [
+         "Applied AI beyond chat by using embeddings and vector retrieval in a product workflow",
+         "Cross-platform full-stack delivery",
+         "Hybrid ranking logic that mixes semantic similarity with practical availability",
+         "Product thinking around recommendation quality and user utility"
+       ],
+       "domains": [
+         "ai",
+         "recommendation-systems",
+         "vector-search",
+         "full-stack",
+         "consumer-product"
+       ],
+       "capabilities": [
+         "OpenAI embeddings",
+         "Pinecone vector search",
+         "Node and Express API design",
+         "JWT authentication",
+         "AWS S3 media storage",
+         "React Native and React web delivery"
+       ],
+       "best_for": [
+         "AI product engineering roles",
+         "full-stack roles",
+         "recommendation systems roles",
+         "consumer app roles"
+       ],
+       "notable_tradeoffs": [
+         "Uses a hybrid ranking model so semantic fit does not overpower ingredient availability.",
+         "Focuses on useful retrieval and ranking rather than treating AI as a novelty feature."
+       ],
+       "recruiter_questions": [
+         "How does this project show practical AI product thinking instead of generic chatbot work?",
+         "What does the ranking approach reveal about his judgment in recommendation-system design?",
+         "How did he combine AI retrieval, backend logic, and product UX in one build?"
+       ],
+       "technical_keywords": [
+         "openai embeddings",
+         "pinecone",
+         "vector search",
+         "node",
+         "express",
+         "jwt",
+         "bcrypt",
+         "aws s3",
+         "react native",
+         "expo",
+         "pwa",
+         "semantic search"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "AWS-Portfolio-RAG",
+       "title": "AWS RAG - Portfolio Assistant",
+       "slug": "aws-rag-portfolio-assistant",
+       "summary": "A recruiter-facing retrieval-augmented chat assistant that answers questions about public GitHub projects with clickable citations grounded in repository content.",
+       "business_problem": "Recruiters can open repositories, but they still struggle to quickly understand what the engineer built, how the system works, and why the work matters.",
+       "user_or_business_outcome": [
+         "Turns public repositories into a grounded conversational portfolio interface.",
+         "Returns clickable citations so answers stay explainable and verifiable.",
+         "Makes technical work more accessible to recruiters without losing source fidelity."
+       ],
+       "strongest_engineering_signals": [
+         "RAG system design with grounding and citation discipline",
+         "AWS-native cloud architecture across retrieval, storage, generation, and API delivery",
+         "Embeddable frontend product design",
+         "Strong full-stack ownership from data preparation to chat widget UX"
+       ],
+       "domains": [
+         "ai",
+         "rag",
+         "cloud",
+         "frontend",
+         "backend",
+         "developer-tools"
+       ],
+       "capabilities": [
+         "Bedrock Knowledge Bases",
+         "Amazon Titan Text Embeddings V2",
+         "Amazon S3 Vectors",
+         "Amazon Nova Lite",
+         "Lambda and API Gateway orchestration",
+         "GitHub Actions ingestion workflows",
+         "Embeddable React widget delivery"
+       ],
+       "best_for": [
+         "AI engineering roles",
+         "cloud backend roles",
+         "full-stack architecture roles",
+         "developer experience roles"
+       ],
+       "notable_tradeoffs": [
+         "Uses buffered responses and a typing indicator in V1 instead of pretending to stream over infrastructure that does not support it well.",
+         "Preserves github_url metadata throughout ingestion so trust and explainability survive retrieval."
+       ],
+       "recruiter_questions": [
+         "How does this project show maturity in RAG architecture rather than simple LLM API usage?",
+         "What AWS trade-offs and retrieval decisions stand out in this implementation?",
+         "How did he make the assistant useful to recruiters while keeping it grounded in evidence?"
+       ],
+       "technical_keywords": [
+         "aws bedrock",
+         "retrieveandgenerate",
+         "amazon nova lite",
+         "titan embeddings v2",
+         "s3 vectors",
+         "lambda",
+         "api gateway",
+         "github actions",
+         "react",
+         "typescript",
+         "tailwind",
+         "citations"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "Uptime-Report",
+       "title": "ISP Uptime Monitor",
+       "slug": "isp-uptime-monitor",
+       "summary": "A business-enablement reporting system that captures network uptime data, centralizes it in Airtable, visualizes it in a dashboard, and generates stakeholder PowerPoint reports in one click.",
+       "business_problem": "Weekly ISP uptime reporting was manual, time-consuming, and error-prone, taking operations time away from actual service delivery.",
+       "user_or_business_outcome": [
+         "Reduces repetitive reporting admin work.",
+         "Improves reporting consistency and data accuracy.",
+         "Generates the stakeholder presentation directly from the browser."
+       ],
+       "strongest_engineering_signals": [
+         "Business enablement through workflow automation",
+         "Internal tool design tied to real operational reporting cycles",
+         "Full workflow ownership from data capture to executive output",
+         "Practical serverless delivery with minimal infrastructure"
+       ],
+       "domains": [
+         "automation",
+         "internal-tools",
+         "reporting",
+         "dashboarding",
+         "serverless"
+       ],
+       "capabilities": [
+         "Mobile-friendly capture workflows",
+         "Serverless APIs on Netlify Functions",
+         "Airtable-backed operational data modeling",
+         "Dashboard aggregation and visual reporting",
+         "Client-side PowerPoint generation"
+       ],
+       "best_for": [
+         "internal tools roles",
+         "business systems roles",
+         "full-stack roles",
+         "operations automation roles"
+       ],
+       "notable_tradeoffs": [
+         "Uses Airtable as a pragmatic operational store instead of building a heavier custom backend.",
+         "Keeps the final reporting artifact in-browser to remove the last manual formatting step."
+       ],
+       "recruiter_questions": [
+         "What operational bottleneck did this project remove, and why does that matter to the business?",
+         "How does this work show business-enablement thinking rather than just dashboard development?",
+         "What made this system accurate, repeatable, and realistic for internal teams to use?"
+       ],
+       "technical_keywords": [
+         "react",
+         "vite",
+         "netlify functions",
+         "airtable",
+         "pptxgenjs",
+         "dashboard",
+         "capture form",
+         "reporting",
+         "serverless api"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "MetalSniper-StatArb",
+       "title": "MetalSniper - Quantitative Trading System",
+       "slug": "metalsniper-quantitative-trading-system",
+       "summary": "A hybrid Python and C++ quantitative trading platform that separates research, inference, execution, and risk across RL-driven directional signals and statistical arbitrage workflows.",
+       "business_problem": "Many trading prototypes collapse research, execution, and risk into one fragile runtime, making the system hard to validate, unsafe to operate, and difficult to extend.",
+       "user_or_business_outcome": [
+         "Creates a clearer architecture for quantitative research, execution, and monitoring.",
+         "Supports both directional ML trading and market-neutral stat arb inside one coordinated platform.",
+         "Improves operational discipline through watchdog startup, telemetry, and independent risk controls."
+       ],
+       "strongest_engineering_signals": [
+         "Quantitative systems thinking rather than single-script automation",
+         "Machine learning integrated with explicit statistical and risk logic",
+         "Python/C++ separation for execution resilience and latency awareness",
+         "Research discipline through shadow journaling, postmortems, and skepticism about overfitting"
+       ],
+       "domains": [
+         "quantitative-systems",
+         "machine-learning",
+         "statistical-arbitrage",
+         "trading-infrastructure",
+         "monitoring"
+       ],
+       "capabilities": [
+         "Recurrent PPO directional models",
+         "Stat arb logic with hedge ratios, z-scores, and half-life",
+         "Interactive Brokers execution bridge",
+         "ZeroMQ inter-process communication",
+         "Supabase-backed telemetry and dashboarding",
+         "Independent risk controls and watchdog runtime management"
+       ],
+       "best_for": [
+         "quant engineering roles",
+         "systems engineering roles",
+         "ML engineering roles",
+         "backend infrastructure roles"
+       ],
+       "notable_tradeoffs": [
+         "Splits Python intelligence from C++ execution to avoid coupling slower AI workloads to broker responsiveness.",
+         "Emphasizes runtime controls, validation, and reviewability rather than making the project depend on vanity PnL claims."
+       ],
+       "recruiter_questions": [
+         "What makes this a quantitative systems project rather than just a trading bot?",
+         "How did he separate research, inference, execution, and risk in a technically credible way?",
+         "What machine learning and statistical arbitrage strengths are most visible here?"
+       ],
+       "technical_keywords": [
+         "python",
+         "c++",
+         "interactive brokers",
+         "zeromq",
+         "recurrent ppo",
+         "stat arb",
+         "z-score",
+         "half-life",
+         "supabase",
+         "next.js",
+         "watchdog",
+         "risk sentinel"
+       ],
+       "confidence": "high"
+     },
+     {
+       "repo": "4dwebsite",
+       "title": "4D Website",
+       "slug": "home",
+       "summary": "A portfolio website that presents project case studies, recruiter-oriented positioning, and an embedded RAG assistant to help visitors navigate the engineer's strongest work.",
+       "business_problem": "A normal portfolio shows projects but does not actively help a recruiter understand strengths, compare work, or navigate toward the most relevant evidence.",
+       "user_or_business_outcome": [
+         "Packages technical projects into recruiter-readable case studies.",
+         "Highlights strengths across IoT, custom hardware, AI, cloud, and business systems.",
+         "Uses an embedded assistant to guide visitors toward the most relevant project evidence."
+       ],
+       "strongest_engineering_signals": [
+         "Product thinking about personal branding and technical storytelling",
+         "Frontend delivery with structured case-study UX",
+         "Ability to turn a portfolio into an interactive technical product",
+         "Clear positioning across multiple engineering domains"
+       ],
+       "domains": [
+         "frontend",
+         "portfolio",
+         "product-design",
+         "developer-branding"
+       ],
+       "capabilities": [
+         "React and Vite single-page delivery",
+         "Tailwind and component-based UI",
+         "Global embedded assistant integration",
+         "Project-level narrative structure and routing"
+       ],
+       "best_for": [
+         "frontend roles",
+         "product-minded full-stack roles",
+         "developer experience roles"
+       ],
+       "notable_tradeoffs": [
+         "Optimizes for clarity, positioning, and guided exploration instead of acting as a plain project gallery.",
+         "Uses project case studies plus interactive chat to make technical work more navigable to non-specialist readers."
+       ],
+       "recruiter_questions": [
+         "How does the portfolio itself show product thinking and technical communication skill?",
+         "What does this site reveal about how he positions multi-domain engineering work?",
+         "How does the assistant improve recruiter navigation compared with a static portfolio?"
+       ],
+       "technical_keywords": [
+         "react",
+         "vite",
+         "tailwind",
+         "framer motion",
+         "routing",
+         "chat widget",
+         "case studies",
+         "portfolio ux"
+       ],
+       "confidence": "medium"
+     }
+   ]
+ }
