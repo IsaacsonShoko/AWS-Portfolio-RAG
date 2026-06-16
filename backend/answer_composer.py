@@ -1,6 +1,7 @@
 import json
 import boto3
 import os
+import re
 from typing import Any
 
 REGION = os.environ.get("AWS_REGION", "us-east-1")
@@ -13,6 +14,37 @@ def _get_client():
     if _client is None:
         _client = boto3.client("bedrock-runtime", region_name=REGION)
     return _client
+
+def _filter_and_renumber_citations(answer_text: str, all_citations: list[dict[str, Any]]) -> tuple[str, list[dict[str, Any]]]:
+    used_ids = []
+    for match in re.finditer(r'\[(\d+)\]', answer_text):
+        cid = int(match.group(1))
+        if cid not in used_ids:
+            used_ids.append(cid)
+            
+    if not used_ids:
+        return answer_text, []
+        
+    old_to_new = {old_id: new_id for new_id, old_id in enumerate(used_ids, start=1)}
+    
+    def replace_marker(match):
+        old_id = int(match.group(1))
+        if old_id in old_to_new:
+            return f"[{old_to_new[old_id]}]"
+        return match.group(0)
+        
+    new_answer_text = re.sub(r'\[(\d+)\]', replace_marker, answer_text)
+    
+    final_citations = []
+    cit_lookup = {c["id"]: c for c in all_citations}
+    
+    for old_id in used_ids:
+        if old_id in cit_lookup:
+            cit = cit_lookup[old_id].copy()
+            cit["id"] = old_to_new[old_id]
+            final_citations.append(cit)
+            
+    return new_answer_text, final_citations
 
 def compose_answer(
     original_question: str, 
@@ -79,9 +111,10 @@ IMPORTANT INSTRUCTIONS:
    - Direct answer
    - Why these projects / strengths
    - Evidence
-3. When using information from the "Code/Doc Evidence" section, you MUST append the corresponding citation marker (e.g., [1] or [2]) at the end of the sentence or claim.
-4. If the answer is not supported by the context, state that you do not have that information.
-5. Do not invent links, file paths, or citations that are not in the context.
+3. When using information from the "Code/Doc Evidence" section, you MUST append the corresponding numeric citation marker exactly like [1] or [1][2] at the end of the sentence. Do not combine them like [1, 2].
+4. ONLY use numeric citations for Code/Doc Evidence. DO NOT add citations or brackets for the Semantic Project Profiles.
+5. If the answer is not supported by the context, state that you do not have that information.
+6. Do not invent links, file paths, or citations that are not in the context.
 
 Respond directly with the formatted answer.
 """
@@ -92,13 +125,20 @@ Respond directly with the formatted answer.
             inferenceConfig={"temperature": 0.2, "maxTokens": 600}
         )
         answer_text = response["output"]["message"]["content"][0]["text"].strip()
+        
+        # Clean up any non-numeric brackets that the LLM might have added for semantic profiles
+        answer_text = re.sub(r'\[Semantic Project Profiles.*?\]', '', answer_text, flags=re.IGNORECASE)
+        
+        # Filter citations array to only include the ones actually used in the text and renumber them sequentially
+        answer_text, final_citations = _filter_and_renumber_citations(answer_text, citations)
     except Exception as exc:
         print(f"Answer composition error: {exc}")
         answer_text = "I encountered an error while formulating the answer. Please try again."
+        final_citations = []
         
     return {
         "answer": answer_text,
-        "citations": citations
+        "citations": final_citations
     }
     
 def suggest_follow_ups(intent: str, semantic_hits: list[dict[str, Any]]) -> list[str]:
